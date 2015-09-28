@@ -69,7 +69,6 @@ int main(void)
 	return 0;
 }
 
-
 /*{{{*/char* LoadFile(char const *path)
 {
 	FILE *fp;
@@ -120,7 +119,6 @@ int main(void)
 			comment_flag = true;	
 		else if(strncmp(ori_file+i, "쌀", 3) == 0)
 		{
-			//	strncpy(file+idx, ori_file+i, 4);
 			strncpy(file+idx, "0", 1);
 			i += 2; idx++;
 		}
@@ -131,7 +129,6 @@ int main(void)
 		}
 		else if(strncmp(ori_file+i, "보리", 6) == 0)
 		{
-			//	strncpy(file+idx, ori_file+i, 8);	
 			strncpy(file+idx, "1", 1);
 			i += 5; idx ++;
 		}
@@ -152,7 +149,6 @@ int main(void)
 	char *binary = strtok(code, "|");
 	while(binary != NULL)
 	{
-		//		printf("operation %d pushed\n", BinaryToDecimal(binary));
 		operation_container.push_back(BinaryToDecimal(binary));
 		binary = strtok(NULL, "|");
 	}
@@ -168,10 +164,6 @@ int main(void)
 /*}}}*/
 /*{{{*/void FetchOperation(vector<int>& operation_container, int operation_idx)
 {
-//	for(int i = operation_idx; i < operation_container.size(); ++i)
-//		printf("operation = %d ", operation_container[i]);
-
-
 	for(int i = operation_idx; i < operation_container.size(); ++i)
 	{
 		int operation = operation_container[i];
@@ -222,9 +214,6 @@ void BeginWhile(vector<int>& operation_container, int operation_idx)
 }
 void EndWhile(vector<int>& operation_container, int operation_idx)
 {	
-	//printf("!go back to %d\n", operation_queue.top());
-
-
 	if(operation_queue.empty())
 	{
 //		fputs("No matching { for }\n", stderr);
