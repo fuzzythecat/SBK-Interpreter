@@ -1,6 +1,7 @@
 # SBK-Interpreter
 
 ==Description==
+
 The SBK(쌀보리콩) Interpreter in C++ is a spin off from the glorious Brainfuck language.  
 It reads commands from a user-input text file, and ignores every character except 
 '쌀', '보리' and '콩', which represents the binary numbers '0' and '1', and a delimiter
@@ -13,6 +14,7 @@ text, and every character that comes afterwards will be ignored.
 Its usage and grammar follow those of Brainfuck's. 
 
 ==Commands==
+
 The eight language commands, each consisting of a string of characters
 
 String of Characters	|	Decimal Number	|	C equivalent
@@ -30,13 +32,16 @@ String of Characters	|	Decimal Number	|	C equivalent
 보리보리보리			    |	7		        		|	}
 
 ==Example==
+
 Check the file "helloworld.txt"
 
 ==Alerts==
+
 The program currently comes with a bug: at the end of the text, put "보리보리보리콩" right
 before you end it with "취사". For some reason it self-goes into while-loop before it closes.
 
 ==Developer(s)==
+
 Younjoon Chung <fuzzy0427@gmail.com>
 
 please contact through the above e-mail address for any inquiries about the project. 
