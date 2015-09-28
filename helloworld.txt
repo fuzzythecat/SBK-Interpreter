@@ -9,19 +9,19 @@
 보리보리쌀콩                                                begin 1st while
     쌀콩 보리쌀콩 보리쌀콩 보리쌀콩 보리쌀콩                add 4 to cell #1
     보리보리쌀콩                                            begin 2nd while
-    쌀콩 보리쌀콩 보리쌀콩                              add 2 to cell #2
-    쌀콩 보리쌀콩 보리쌀콩 보리쌀콩                     add 3 to cell #3
-    쌀콩 보리쌀콩 보리쌀콩 보리쌀콩                     add 3 to cell #4
-    쌀콩 보리쌀콩                                       add 1 to cell #5
+    쌀콩 보리쌀콩 보리쌀콩                                  add 2 to cell #2
+    쌀콩 보리쌀콩 보리쌀콩 보리쌀콩                         add 3 to cell #3
+    쌀콩 보리쌀콩 보리쌀콩 보리쌀콩                         add 3 to cell #4
+    쌀콩 보리쌀콩                                           add 1 to cell #5
         보리콩 보리콩 보리콩 보리콩 보리보리콩              decrement loop counter in cell #1
-	보리보리보리콩                                          end of 2nd while
+	보리보리보리콩                                      end of 2nd while
     쌀콩 보리쌀콩                                           add 1 to cell #2
     쌀콩 보리쌀콩                                           add 1 to cell #3
     쌀콩 보리보리콩                                         subtract 1 from cell #4
-    쌀콩 쌀콩 보리쌀콩										add 1 to cell #6
+    쌀콩 쌀콩 보리쌀콩                                      add 1 to cell #6
     보리보리쌀콩 보리콩 보리보리보리콩                      move back to cell #1
     보리콩 보리보리콩                                       decrement loop counter in cell #0
-보리보리보리콩												end of 1st while
+보리보리보리콩                                              end of 1st while
 
 the result of this is
 | ------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
