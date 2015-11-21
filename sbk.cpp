@@ -8,7 +8,7 @@
 #include<vector>
 #include<stack>
 
-#define MAX_SIZE 100000
+#define MAX_SIZE 1000000
 
 using namespace std;
 
@@ -27,7 +27,7 @@ enum OPERATION_TYPE
 };
 
 char c_array[MAX_SIZE], *c_ptr = c_array;
-stack<int> operation_queue;
+stack<int> loop_stack;
 
 void IncDataPtr(void);
 void DecDataPtr(void);
@@ -35,27 +35,26 @@ void IncByteAtPtr(void);
 void DecByteAtPtr(void);
 void OutputDataAtPtr(void);
 void ScanDataAtPtr(void);
-void BeginWhile(vector<int>&, int);
-void EndWhile(vector<int>&, int);
+void BeginDoWhile(vector<int>&, int);
+void EndDoWhile(vector<int>&, int);
 
 char* LoadFile(char const *);
 char* TruncateFile(char const *, bool *);
 int BinaryToDecimal(char const *);
 void StoreOperation(vector<int>&, char *);
 void FetchOperation(vector<int>&, int);
+void LoopOperation(vector<int>& operation_container, int operation_sidx, int operation_eidx);
 void CheckForError(bool const);
 void RunOperation(int const, vector<int>&, int);
 void (*OperationTable[6]) (void) = {IncDataPtr, DecDataPtr, IncByteAtPtr, DecByteAtPtr, OutputDataAtPtr, ScanDataAtPtr};
 
-int main(void)
+int main(int argc, char *argv[])
 {	
-	char *ori_file, *code;
-	printf("Input the file name: ");
-	char path[100];scanf("%s", path);
+	char *text, *code;
 	bool fin_flag = false;
 	vector<int> operation_container; 
-	ori_file = LoadFile(path);
-	code = TruncateFile(ori_file, &fin_flag); 
+	text = LoadFile(argv[1]);
+	code = TruncateFile(text, &fin_flag); 
 
 	CheckForError(fin_flag);
 
@@ -63,7 +62,7 @@ int main(void)
 
 	FetchOperation(operation_container, 0);
 	
-	free(ori_file);
+	free(text);
 	free(code);
 
 	return 0;
@@ -85,54 +84,59 @@ int main(void)
 	file = (char*)calloc(1, size+1);
 	if(!file)
 	{
-		fclose(fp); fputs("Failed to allocate memory", stderr); exit(1);
+		fclose(fp); 
+		fputs("Failed to allocate memory", stderr); 
+		exit(1);
 	}
 
 	if(fread(file, size, 1, fp) != 1)
 	{
-		fclose(fp); free(file); fputs("Failed to read the entire file", stderr); exit(1);
+		fclose(fp); 
+		free(file); 
+		fputs("Failed to read the entire file", stderr); 
+		exit(1);
 	}
 	fclose(fp);
 
 	return file;
 }
 /*}}}*/
-/*{{{*/char* TruncateFile(char const *ori_file, bool *fin_flag)
+/*{{{*/char* TruncateFile(char const *text, bool *fin_flag)
 {
-	int idx = 0, size = strlen(ori_file);
+	int idx = 0, size = strlen(text);
 	char *file = (char*)malloc(sizeof(char) * size);
 	bool comment_flag = false;
 	char comment_char = '@';
-
+	
 	for(int i = 0; i < size; ++i)
 	{
 		if(comment_flag)
 		{
 			for(;i < size; ++i)
-				if(ori_file[i] == comment_char) 
+				if(text[i] == comment_char) 
 				{ 
 					comment_flag = false;
 					break; 
 				}	
 		}
-		else if(ori_file[i] == comment_char)
+		else if(text[i] == comment_char)
 			comment_flag = true;	
-		else if(strncmp(ori_file+i, "쌀", 3) == 0)
+		else if(strncmp(text+i, "쌀", 3) == 0)
 		{
 			strncpy(file+idx, "0", 1);
 			i += 2; idx++;
 		}
-		else if(strncmp(ori_file+i, "콩", 3) == 0)
+		else if(strncmp(text+i, "콩", 3) == 0)
 		{
 			strncpy(file+idx, "|", 1);
 			i += 2; idx++;
 		}
-		else if(strncmp(ori_file+i, "보리", 6) == 0)
+		else if(strncmp(text+i, "보리", 6) == 0)
 		{
 			strncpy(file+idx, "1", 1);
 			i += 5; idx ++;
 		}
-		else if(strncmp(ori_file+i, "취사", 6) == 0)
+		else if(strncmp(text+i, "취사", 6) == 0)
 		{
 			*fin_flag = true;
 			break;
@@ -170,17 +174,35 @@ int main(void)
 		RunOperation(operation, operation_container, i+1);		
 	}
 }
-/*}}}*/
-
+/*}}}*/ 
+/*{{{*/void LoopOperation(vector<int>& operation_container, int operation_sidx, int operation_eidx)
+{
+	for(int i = operation_sidx; i < operation_eidx; ++i)
+	{
+		int operation = operation_container[i];
+		RunOperation(operation, operation_container, i+1);		
+	}
+}
+/*}}}*/ 
 /*{{{*/void CheckForError(bool fin_flag)
 {
 	if(!fin_flag)
 		fputs("Unable to cook the file", stderr), exit(1);
 }
 /*}}}*/
+/*{{{*/void RunOperation(int operation, vector<int>& operation_container, int operation_idx)
+{
+	if(operation <= 5 && operation >= 0)
+		OperationTable[operation]();
+	else if(operation == BEGIN_WHILE)
+		BeginDoWhile(operation_container, operation_idx);
+	else if(operation == END_WHILE)
+		EndDoWhile(operation_container, operation_idx);
+}
 
-//8 basic ptr operations
-/*{{{*/
+/*}}}*/
+
+/*{{{ 8 Basic Ptr Operations*/
 void IncDataPtr(void)
 {
 	c_ptr++;
@@ -206,37 +228,21 @@ void ScanDataAtPtr(void)
 	scanf("%c", c_ptr);
 	while(getchar()!='\n');
 }
-void BeginWhile(vector<int>& operation_container, int operation_idx)
+void BeginDoWhile(vector<int>& operation_container, int operation_idx)
 {
-	operation_queue.push(operation_idx);
-//	printf("go back to %d\n", operation_idx);
-	FetchOperation(operation_container, operation_idx);
+	loop_stack.push(operation_idx);
 }
-void EndWhile(vector<int>& operation_container, int operation_idx)
+void EndDoWhile(vector<int>& operation_container, int operation_idx)
 {	
-	if(operation_queue.empty())
+	if(loop_stack.empty())
 	{
-//		fputs("No matching { for }\n", stderr);
+		fputs("No matching { for }\n", stderr);
 		exit(1);
 	}	
-	if(*(c_ptr) != false)
-		FetchOperation(operation_container, operation_queue.top());
+	if(*(c_ptr) != 0)
+		LoopOperation(operation_container, loop_stack.top(), operation_idx);
 	else
-	{
-		operation_queue.pop();	
-		FetchOperation(operation_container, operation_idx);
-	}
+		loop_stack.pop();	
 }
-/*}}}*/
-
-/*{{{*/void RunOperation(int operation, vector<int>& operation_container, int operation_idx)
-{
-	if(operation <= 5 && operation >= 0)
-		OperationTable[operation]();
-	else if(operation == BEGIN_WHILE)
-		BeginWhile(operation_container, operation_idx);
-	else if(operation == END_WHILE)
-		EndWhile(operation_container, operation_idx);
-}
-/*}}}*/
+/*}}}*/ 
 
