@@ -27,8 +27,8 @@ The eight language commands, each consisting of a string of characters
 | 보리보리             | 3              | --*ptr;                   |
 | 보리쌀쌀             | 4              | putchar(*ptr);            |
 | 보리쌀보리           | 5              | *ptr = getchar();         |
-| 보리보리쌀           | 6              | while (*ptr) {            |
-| 보리보리보리         | 7              | }                         |
+| 보리보리쌀           | 6              | do {                      |
+| 보리보리보리         | 7              | } while (*ptr)            |
 
 __==Example==__
 
