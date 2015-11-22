@@ -42,8 +42,8 @@ char* LoadFile(char const *);
 char* TruncateFile(char const *, bool *);
 int BinaryToDecimal(char const *);
 void StoreOperation(vector<int>&, char *);
-void FetchOperation(vector<int>&, int);
-void LoopOperation(vector<int>& operation_container, int operation_sidx, int operation_eidx);
+void ExecuteOperaions(vector<int>&, int);
+void LoopOperations(vector<int>& operation_container, int operation_sidx, int operation_eidx);
 void CheckForError(bool const);
 void RunOperation(int const, vector<int>&, int);
 void (*OperationTable[6]) (void) = {IncDataPtr, DecDataPtr, IncByteAtPtr, DecByteAtPtr, OutputDataAtPtr, ScanDataAtPtr};
@@ -53,6 +53,13 @@ int main(int argc, char *argv[])
 	char *text, *code;
 	bool fin_flag = false;
 	vector<int> operation_container; 
+
+	if(argc < 2)
+	{
+		fprintf(stderr, "[Usage] %s <sbk file>\n", argv[0]);
+		return 1;
+	}
+
 	text = LoadFile(argv[1]);
 	code = TruncateFile(text, &fin_flag); 
 
@@ -60,7 +67,7 @@ int main(int argc, char *argv[])
 
 	StoreOperation(operation_container, code);
 
-	FetchOperation(operation_container, 0);
+	ExecuteOperaions(operation_container, 0);
 	
 	free(text);
 	free(code);
@@ -166,7 +173,7 @@ int main(int argc, char *argv[])
 	return dec;
 }
 /*}}}*/
-/*{{{*/void FetchOperation(vector<int>& operation_container, int operation_idx)
+/*{{{*/void ExecuteOperaions(vector<int>& operation_container, int operation_idx)
 {
 	for(int i = operation_idx; i < operation_container.size(); ++i)
 	{
@@ -175,7 +182,7 @@ int main(int argc, char *argv[])
 	}
 }
 /*}}}*/ 
-/*{{{*/void LoopOperation(vector<int>& operation_container, int operation_sidx, int operation_eidx)
+/*{{{*/void LoopOperations(vector<int>& operation_container, int operation_sidx, int operation_eidx)
 {
 	for(int i = operation_sidx; i < operation_eidx; ++i)
 	{
@@ -240,7 +247,7 @@ void EndDoWhile(vector<int>& operation_container, int operation_idx)
 		exit(1);
 	}	
 	if(*(c_ptr) != 0)
-		LoopOperation(operation_container, loop_stack.top(), operation_idx);
+		LoopOperations(operation_container, loop_stack.top(), operation_idx);
 	else
 		loop_stack.pop();	
 }
