@@ -9,5 +9,5 @@ $(TARGET): $(OBJECTS)
 sbk.o: sbk.cpp
 	g++ -c sbk.cpp
 
-clear:
-	rm -rf *.o
+clean:
+	rm -rf *.o *.out
